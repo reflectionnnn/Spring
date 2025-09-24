@@ -43,13 +43,13 @@ function Spring.ApplyImpulse(self: Spring, force: Vector3): ()
 end
 
 function Spring.Update(self: Spring, deltaTime: number): Vector3
-	local scaledDeltaTime = (math.min(deltaTime, 1) * self._speed) / ITERATIONS
+	local scaledDeltaTime = (math.min(deltaTime, 1) * self.Speed) / ITERATIONS
 
 	for _ = 1, ITERATIONS do
 		local iterationForce = self._target - self._position
-		local acceleration = (iterationForce * self._force) / self._mass
+		local acceleration = (iterationForce * self.Force) / self.Mass
 
-		acceleration -= self._velocity * self._damping
+		acceleration -= self._velocity * self.Damping
 
 		self._velocity += acceleration * scaledDeltaTime
 		self._position += self._velocity * scaledDeltaTime
