@@ -74,7 +74,7 @@ export type PartialState = {
     @field SetState (state: PartialState) -> () -- Updates specific properties of the spring's state.
     @field GetState () -> State -- Returns a read-only copy of the current state.
 ]=]
-export type Spring = {
+export type SpringObject = {
 	Update: (deltaTime: number) -> Vector3,
 	ApplyImpulse: (force: Vector3) -> (),
 
@@ -154,7 +154,7 @@ local function __call(mass: number?, force: number?, damping: number?, speed: nu
 		return table.freeze(state) :: State
 	end
 
-	local spring: Spring = {
+	local spring: SpringObject = {
 		Update = update,
 		ApplyImpulse = applyImpulse,
 
@@ -162,7 +162,7 @@ local function __call(mass: number?, force: number?, damping: number?, speed: nu
 		GetState = getState,
 	}
 
-	return table.freeze(spring) :: Spring
+	return table.freeze(spring) :: SpringObject
 end
 
 return __call
