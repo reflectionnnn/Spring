@@ -1,0 +1,11 @@
+{
+  "name": "Spring",
+  "tree": {
+    "$className": "DataModel",
+    "ReplicatedStorage": {
+      "Spring": {
+        "$path": "lib"
+      }
+    }
+  }
+}

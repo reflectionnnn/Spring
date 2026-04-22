@@ -1,0 +1,11 @@
+[package]
+name = "reflectionnnn/spring"
+description = "Closure spring physics module."
+license = "MIT"
+authors = ["Reflection"]
+version = "2.0.0"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+include = ["lib", "LICENSE"]
+
+[dependencies]
