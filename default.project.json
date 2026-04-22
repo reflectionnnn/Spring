@@ -1,11 +1,6 @@
 {
-  "name": "Spring",
-  "tree": {
-    "$className": "DataModel",
-    "ReplicatedStorage": {
-      "Spring": {
+    "name": "Spring",
+    "tree": {
         "$path": "lib"
-      }
     }
-  }
 }

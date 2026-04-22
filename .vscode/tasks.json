@@ -4,7 +4,7 @@
         {
             "label": "Build",
             "type": "shell",
-            "command": "rojo build -o Spring.rbxm pack.project.json",
+            "command": "rojo build -o Spring.rbxm",
             "group": {
                 "kind": "build",
                 "isDefault": true
