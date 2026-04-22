@@ -32,7 +32,6 @@ export type State = {
 	Position: Vector3,
 	Target: Vector3,
 	Velocity: Vector3,
-
 	Mass: number,
 	Force: number,
 	Damping: number,
@@ -57,7 +56,6 @@ export type PartialState = {
 	Position: Vector3?,
 	Target: Vector3?,
 	Velocity: Vector3?,
-
 	Mass: number?,
 	Force: number?,
 	Damping: number?,
@@ -77,13 +75,13 @@ export type PartialState = {
 export type SpringObject = {
 	Update: (deltaTime: number) -> Vector3,
 	ApplyImpulse: (force: Vector3) -> (),
-
 	SetState: (state: PartialState) -> (),
 	GetState: () -> State,
 }
 
 -- Cached
 local math_min = math.min
+local vector3_zero = Vector3.zero
 
 --[=[
     Creates a new Spring instance.
@@ -95,16 +93,16 @@ local math_min = math.min
     @param iteration number? -- The number of iterations per update (Default: 8)
     @return SpringObject
 ]=]
-local function __call(mass: number?, force: number?, damping: number?, speed: number?, iteration: number?): Spring
+local function __call(mass: number?, force: number?, damping: number?, speed: number?, iteration: number?): SpringObject
 	local self_mass = mass or DEFAULT_MASS
 	local self_force = force or DEFAULT_FORCE
 	local self_damping = damping or DEFAULT_DAMPING
 	local self_speed = speed or DEFAULT_SPEED
 	local self_iterations = iteration or DEFAULT_ITERATIONS
 
-	local self_position = Vector3.zero
-	local self_target = Vector3.zero
-	local self_velocity = Vector3.zero
+	local self_position = vector3_zero
+	local self_target = vector3_zero
+	local self_velocity = vector3_zero
 
 	local function update(deltaTime: number): Vector3
 		local scaledDeltaTime = (math_min(deltaTime, 1) * self_speed) / self_iterations
