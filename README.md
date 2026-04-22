@@ -2,6 +2,9 @@
 
 A high-performance, physics-based 3D spring simulation module for Luau. This module uses numerical integration with sub-stepping to provide stable and smooth motion, making it ideal for camera systems, procedural animations, and UI effects.
 
+[View Documentation](https://reflectionnnn.github.io/Spring/)
+
+
 ## Features
 
 - **3D Vector Support**: Built natively for `Vector3` operations.
