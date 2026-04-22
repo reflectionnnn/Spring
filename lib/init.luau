@@ -1,4 +1,12 @@
+--!native
+--!optimize 2
 --!strict
+
+--[=[
+    @class Spring
+    A physics-based 3D spring simulation closure based module using numerical integration.
+    Useful for smooth object physics and camera movement.
+]=]
 
 -- Constants
 local DEFAULT_MASS = 5
@@ -7,6 +15,19 @@ local DEFAULT_DAMPING = 4
 local DEFAULT_SPEED = 4
 local DEFAULT_ITERATIONS = 8
 
+--[=[
+    Represents the current physical state and properties of the spring.
+    @interface State
+    @within Spring
+    @field Position Vector3 -- The current position of the spring.
+    @field Target Vector3 -- The target position the spring is moving towards.
+    @field Velocity Vector3 -- The current velocity of the spring.
+    @field Mass number -- The mass of the spring.
+    @field Force number -- The force applied to the spring.
+    @field Damping number -- The damping factor (friction) of the spring.
+    @field Speed number -- The simulation speed multiplier.
+    @field Iterations number -- The number of calculation iterations per update for stability.
+]=]
 export type State = {
 	Position: Vector3,
 	Target: Vector3,
@@ -19,29 +40,67 @@ export type State = {
 	Iterations: number,
 }
 
+--[=[
+    A partial state object used for updating specific spring properties.
+    @interface PartialState
+    @within Spring
+    @field Position Vector3? -- Optional position override.
+    @field Target Vector3? -- Optional target override.
+    @field Velocity Vector3? -- Optional velocity override.
+    @field Mass number? -- Optional mass override.
+    @field Force number? -- Optional force override.
+    @field Damping number? -- Optional damping override.
+    @field Speed number? -- Optional speed multiplier override.
+    @field Iterations number? -- Optional iterations override.
+]=]
+export type PartialState = {
+	Position: Vector3?,
+	Target: Vector3?,
+	Velocity: Vector3?,
+
+	Mass: number?,
+	Force: number?,
+	Damping: number?,
+	Speed: number?,
+	Iterations: number?,
+}
+
+--[=[
+    The Spring object instance containing the methods to simulate and interact with the spring.
+    @interface SpringObject
+    @within Spring
+    @field Update (deltaTime: number) -> Vector3 -- Steps the simulation forward and returns the new position.
+    @field ApplyImpulse (force: Vector3) -> () -- Applies an instantaneous force to the spring's velocity.
+    @field SetState (state: PartialState) -> () -- Updates specific properties of the spring's state.
+    @field GetState () -> State -- Returns a read-only copy of the current state.
+]=]
 export type Spring = {
 	Update: (deltaTime: number) -> Vector3,
 	ApplyImpulse: (force: Vector3) -> (),
 
-	SetState: (state: { [any]: any }) -> (),
+	SetState: (state: PartialState) -> (),
 	GetState: () -> State,
 }
 
 -- Cached
 local math_min = math.min
 
-local function CreateSpring(
-	input_mass: number?,
-	input_force: number?,
-	input_damping: number?,
-	input_speed: number?,
-	input_iteration: number?
-): Spring
-	local self_mass = input_mass or DEFAULT_MASS
-	local self_force = input_force or DEFAULT_FORCE
-	local self_damping = input_damping or DEFAULT_DAMPING
-	local self_speed = input_speed or DEFAULT_SPEED
-	local self_iterations = input_iteration or DEFAULT_ITERATIONS
+--[=[
+    Creates a new Spring instance.
+    @within Spring
+    @param mass number? -- The mass of the spring (Default: 5)
+    @param force number? -- The force/stiffness of the spring (Default: 50)
+    @param damping number? -- The damping/friction (Default: 4)
+    @param speed number? -- The speed multiplier (Default: 4)
+    @param iteration number? -- The number of iterations per update (Default: 8)
+    @return SpringObject
+]=]
+local function __call(mass: number?, force: number?, damping: number?, speed: number?, iteration: number?): Spring
+	local self_mass = mass or DEFAULT_MASS
+	local self_force = force or DEFAULT_FORCE
+	local self_damping = damping or DEFAULT_DAMPING
+	local self_speed = speed or DEFAULT_SPEED
+	local self_iterations = iteration or DEFAULT_ITERATIONS
 
 	local self_position = Vector3.zero
 	local self_target = Vector3.zero
@@ -67,7 +126,7 @@ local function CreateSpring(
 		self_velocity += impulse
 	end
 
-	local function setState(state: { [any]: any })
+	local function setState(state: PartialState)
 		self_position = state.Position or self_position
 		self_target = state.Target or self_target
 		self_velocity = state.Velocity or self_velocity
@@ -106,4 +165,4 @@ local function CreateSpring(
 	return table.freeze(spring) :: Spring
 end
 
-return CreateSpring
+return __call
